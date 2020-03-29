@@ -29,9 +29,9 @@ body {
 }
 
 @media (min-width: 992px) {
-  body {
-    padding-top: 56px;
-  }
+    body {
+        padding-top: 56px;
+    }
 }
 
 .carousel-caption {
@@ -47,9 +47,8 @@ body {
     text-align: center;
 }
 
-
 .portfolio-item {
-  margin-bottom: 30px;
+    margin-bottom: 30px;
 }
 
 .card-image {
