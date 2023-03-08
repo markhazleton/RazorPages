@@ -24,7 +24,7 @@ namespace WiredBrainCoffee.Api.Controllers
             // Todo: Save contact info to the database
 
             // Write uploaded files to images directory
-            foreach(var file in contact.AttachedFiles)
+            foreach (var file in contact.AttachedFiles)
             {
                 var path = $"{webHostEnvironment.ContentRootPath}\\images\\{file.FileName}";
                 var fs = System.IO.File.Create(path);

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using WiredBrainCoffee.Models;
+﻿using WiredBrainCoffee.Models;
 
 namespace WiredBrainCoffee.Services
 {

@@ -31,7 +31,7 @@ namespace WiredBrainCoffee.MinApi
                     Total = 35
                 }
             );
-            
+
         }
     }
 }

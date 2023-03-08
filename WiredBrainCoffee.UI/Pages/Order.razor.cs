@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using WiredBrainCoffee.Models;
-using WiredBrainCoffee.UI.Services;
 using WiredBrainCoffee.UI.Components;
+using WiredBrainCoffee.UI.Services;
 
 namespace WiredBrainCoffee.UI.Pages
 {
@@ -17,8 +17,8 @@ namespace WiredBrainCoffee.UI.Pages
 
         [Inject]
         public NavigationManager NavManager { get; set; }
-        
-        [CascadingParameter] 
+
+        [CascadingParameter]
         public IModalService Modal { get; set; }
 
         public List<OrderItem> CurrentOrder { get; set; } = new List<OrderItem>();
@@ -26,7 +26,7 @@ namespace WiredBrainCoffee.UI.Pages
         public List<MenuItem> CoffeeMenuItems { get; set; } = new List<MenuItem>();
         public decimal OrderTotal { get; set; } = 0;
         public decimal SalesTax { get; set; } = 0.06m;
-        public string PromoCode { get; set; } = "";
+        public string PromoCode { get; set; } = string.Empty;
         public bool IsValidPromoCode { get; set; } = true;
 
         [Parameter]
@@ -40,7 +40,7 @@ namespace WiredBrainCoffee.UI.Pages
         }
 
         async Task AddExtras(MenuItem item)
-        { 
+        {
             item.Extras = new Extras();
             var formModal = Modal.Show<CoffeeExtrasModal>("Enhance Your Coffee");
             var result = await formModal.Result;
@@ -79,18 +79,18 @@ namespace WiredBrainCoffee.UI.Pages
             if (string.IsNullOrEmpty(PromoCode) || IsValidPromoCode)
             {
                 NavManager.NavigateTo("order-confirmation");
-            } 
+            }
             else
             {
                 IsValidPromoCode = false;
             }
-            
+
         }
 
         protected async override Task OnInitializedAsync()
         {
             var menuItems = await MenuService.GetMenuItems();
-            
+
             FoodMenuItems = menuItems.Where(x => x.Category == "Food").ToList();
             CoffeeMenuItems = menuItems.Where(x => x.Category == "Coffee").ToList();
         }
