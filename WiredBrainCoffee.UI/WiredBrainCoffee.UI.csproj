@@ -1,26 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
-
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-	  <BlazorEnableCompression>False</BlazorEnableCompression>
+    <BlazorEnableCompression>False</BlazorEnableCompression>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Blazored.Modal" Version="7.1.0" />
-    <PackageReference Include="Blazorise.Bootstrap" Version="1.2.2" />
-    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.2.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.4" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.RazorPages" Version="2.2.5" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.4" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+    <PackageReference Include="Blazored.Modal" Version="7.3.1" />
+    <PackageReference Include="Blazorise.Bootstrap" Version="1.6.0" />
+    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.7" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\WiredBrainCoffee.Models\WiredBrainCoffee.Models.csproj" />
   </ItemGroup>
-
 </Project>
