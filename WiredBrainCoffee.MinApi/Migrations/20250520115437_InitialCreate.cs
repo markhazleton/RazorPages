@@ -3,10 +3,14 @@ using System;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace WiredBrainCoffee.MinApi.Migrations
 {
+    /// <inheritdoc />
     public partial class InitialCreate : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -15,6 +19,7 @@ namespace WiredBrainCoffee.MinApi.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    CustomerName = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     OrderNumber = table.Column<int>(type: "INTEGER", nullable: false),
                     PromoCode = table.Column<string>(type: "TEXT", nullable: false),
@@ -28,15 +33,15 @@ namespace WiredBrainCoffee.MinApi.Migrations
 
             migrationBuilder.InsertData(
                 table: "Orders",
-                columns: new[] { "Id", "Created", "Description", "OrderNumber", "PromoCode", "Total" },
-                values: new object[] { 1, DateTime.Now, "A coffee order", 100, "Wired123", 25m });
-
-            migrationBuilder.InsertData(
-                table: "Orders",
-                columns: new[] { "Id", "Created", "Description", "OrderNumber", "PromoCode", "Total" },
-                values: new object[] { 2, DateTime.Now, "A food order", 125, "Wired123", 35m });
+                columns: new[] { "Id", "Created", "CustomerName", "Description", "OrderNumber", "PromoCode", "Total" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 1, 1, 8, 0, 0, 0, DateTimeKind.Utc), "John Doe", "A coffee order", 100, "Wired123", 25m },
+                    { 2, new DateTime(2024, 1, 1, 8, 0, 0, 0, DateTimeKind.Utc), "Jane Smith", "A food order", 125, "Wired123", 35m }
+                });
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

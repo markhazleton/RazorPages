@@ -1,58 +1,65 @@
-﻿namespace WiredBrainCoffee.MinApi
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace WiredBrainCoffee.MinApi
 {
     public class OrderService : IOrderService
     {
-        private OrderDbContext _context;
+        private readonly OrderDbContext _context;
 
         public OrderService(OrderDbContext context)
         {
             _context = context;
         }
 
-        public List<Order> GetOrders()
+        public async Task<List<Order>> GetOrdersAsync()
         {
-            return _context.Orders.ToList();
+            return await _context.Orders.ToListAsync();
         }
 
-        public Order GetOrderById(int id)
+        public async Task<Order> GetOrderByIdAsync(int id)
         {
-            return _context.Orders.FirstOrDefault(x => x.Id == id);
+            return await _context.Orders.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public Order AddOrder(Order order)
+        public async Task<Order> AddOrderAsync(Order order)
         {
-            _context.Orders.Add(order);
-            _context.SaveChanges();
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
 
             return order;
         }
 
-        public void UpdateOrder(int id, Order newOrder)
+        public async Task UpdateOrderAsync(int id, Order newOrder)
         {
-            var order = _context.Orders.FirstOrDefault(x => x.Id == id);
+            var order = await _context.Orders.FirstOrDefaultAsync(x => x.Id == id);
 
-            order.Description = newOrder.Description;
-            order.PromoCode = newOrder.PromoCode;
-            order.Total = newOrder.Total;
-            order.OrderNumber = newOrder.OrderNumber;
-            _context.SaveChanges();
+            if (order != null)
+            {
+                order.Description = newOrder.Description;
+                order.PromoCode = newOrder.PromoCode;
+                order.Total = newOrder.Total;
+                order.OrderNumber = newOrder.OrderNumber;
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public void DeleteOrder(int id)
+        public async Task DeleteOrderAsync(int id)
         {
-            var order = _context.Orders.FirstOrDefault(x => x.Id == id);
-            _context.Orders.Remove(order);
-
-            _context.SaveChanges();
+            var order = await _context.Orders.FirstOrDefaultAsync(x => x.Id == id);
+            if (order != null)
+            {
+                _context.Orders.Remove(order);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 
     public interface IOrderService
     {
-        Order AddOrder(Order order);
-        void DeleteOrder(int id);
-        Order GetOrderById(int id);
-        List<Order> GetOrders();
-        void UpdateOrder(int id, Order newOrder);
+        Task<Order> AddOrderAsync(Order order);
+        Task DeleteOrderAsync(int id);
+        Task<Order> GetOrderByIdAsync(int id);
+        Task<List<Order>> GetOrdersAsync();
+        Task UpdateOrderAsync(int id, Order newOrder);
     }
 }

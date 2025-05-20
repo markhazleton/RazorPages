@@ -1,19 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <BlazorEnableCompression>False</BlazorEnableCompression>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Blazored.Modal" Version="7.3.1" />
-    <PackageReference Include="Blazorise.Bootstrap" Version="1.6.0" />
-    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.6.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.7" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Blazorise.Bootstrap" Version="1.7.6" />
+    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.7.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.5" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WiredBrainCoffee.Models\WiredBrainCoffee.Models.csproj" />

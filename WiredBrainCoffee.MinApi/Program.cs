@@ -4,25 +4,29 @@ using WiredBrainCoffee.MinApi;
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("Orders") ?? "Data Source=Orders.db";
 
+// Add services to the container
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddSqlite<OrderDbContext>(connectionString);
+builder.Services.AddHealthChecks();
+builder.Services.AddHttpClient();
+builder.Services.AddResponseCompression();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("Default", builder =>
-    {
-        builder.AllowAnyOrigin();
-    });
+    options.AddPolicy("Default", policy =>
+        policy.WithOrigins("https://trustedclient.com") // Replace with trusted client URLs
+              .AllowAnyMethod()
+              .AllowAnyHeader());
 });
-builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
+// Ensure database is ready
 await CreateDb(app.Services, app.Logger);
 
-// Configure the HTTP request pipeline.
+// Configure the middleware pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -30,23 +34,43 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors();
+app.UseCors("Default");
+app.UseResponseCompression();
+app.MapHealthChecks("/health");
 
-app.MapGet("/order-status", async (IHttpClientFactory factory) =>
+// Define endpoints
+app.MapGet("/order-status", async (IHttpClientFactory factory, ILogger<Program> logger) =>
 {
     var client = factory.CreateClient();
-    var response = await client.GetFromJsonAsync<OrderSystemStatus>("https://wiredbraincoffee.azurewebsites.net/api/OrderSystemStatus");
+    try
+    {
+        logger.LogInformation("Fetching order system status...");
+        var response = await client.GetFromJsonAsync<OrderSystemStatus>("https://wiredbraincoffee.azurewebsites.net/api/OrderSystemStatus");
 
-    return Results.Ok(response);
+        if (response == null)
+        {
+            logger.LogWarning("Order system status response was null.");
+            return Results.Problem("Unable to fetch order system status.", statusCode: 503);
+        }
+
+        return Results.Ok(response);
+    }
+    catch (HttpRequestException ex)
+    {
+        logger.LogError(ex, "Error fetching order system status.");
+        return Results.Problem("Unable to fetch order system status.", statusCode: 503);
+    }
 })
 .WithName("Get system status");
 
-app.MapGet("/orders/{id}", (int id, IOrderService orderService) =>
+app.MapGet("/orders/{id}", async (int id, IOrderService orderService, ILogger<Program> logger) =>
 {
-    var order = orderService.GetOrderById(id);
+    logger.LogInformation("Fetching order with ID: {Id}", id);
+    var order = await orderService.GetOrderByIdAsync(id);
 
     if (order == null)
     {
+        logger.LogWarning("Order with ID: {Id} not found.", id);
         return Results.NotFound();
     }
 
@@ -54,45 +78,58 @@ app.MapGet("/orders/{id}", (int id, IOrderService orderService) =>
 })
 .WithName("Get order by id");
 
-
-app.MapGet("/orders", (IOrderService orderService) =>
+app.MapGet("/orders", async (IOrderService orderService, ILogger<Program> logger) =>
 {
-    return Results.Ok(orderService.GetOrders());
+    logger.LogInformation("Fetching all orders...");
+    var orders = await orderService.GetOrdersAsync();
+    return Results.Ok(orders);
 })
 .WithName("Get orders");
 
-
-app.MapPost("/orders", (Order newOrder, IOrderService orderService) =>
+app.MapPost("/orders", async (Order newOrder, IOrderService orderService, ILogger<Program> logger) =>
 {
-    var createdOrder = orderService.AddOrder(newOrder);
+    if (string.IsNullOrWhiteSpace(newOrder.CustomerName))
+    {
+        logger.LogWarning("Invalid order creation attempt with missing customer name.");
+        return Results.BadRequest("Customer name is required.");
+    }
 
+    logger.LogInformation("Creating new order for customer: {CustomerName}", newOrder.CustomerName);
+    var createdOrder = await orderService.AddOrderAsync(newOrder);
     return Results.Created($"/orders/{createdOrder.Id}", createdOrder);
 })
 .WithName("Create order");
 
-
-app.MapPut("/orders/{id}", (int id, Order updatedOrder, IOrderService orderService) =>
+app.MapPut("/orders/{id}", async (int id, Order updatedOrder, IOrderService orderService, ILogger<Program> logger) =>
 {
-    orderService.UpdateOrder(id, updatedOrder);
-
+    logger.LogInformation("Updating order with ID: {Id}", id);
+    await orderService.UpdateOrderAsync(id, updatedOrder);
     return Results.NoContent();
 })
-.WithName("Update Order");
+.WithName("Update order");
 
-
-app.MapDelete("/orders/{id}", (int id, IOrderService orderService) =>
+app.MapDelete("/orders/{id}", async (int id, IOrderService orderService, ILogger<Program> logger) =>
 {
-    orderService.DeleteOrder(id);
-
+    logger.LogInformation("Deleting order with ID: {Id}", id);
+    await orderService.DeleteOrderAsync(id);
     return Results.Ok();
 })
-.WithName("Delete Order");
+.WithName("Delete order");
 
 app.Run();
 
 async Task CreateDb(IServiceProvider services, ILogger logger)
 {
-    using var db = services.CreateScope().ServiceProvider.GetRequiredService<OrderDbContext>();
-    await db.Database.MigrateAsync();
+    try
+    {
+        using var scope = services.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<OrderDbContext>();
+        await dbContext.Database.MigrateAsync();
+        logger.LogInformation("Database migration completed successfully.");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred while migrating the database.");
+        throw;
+    }
 }
-

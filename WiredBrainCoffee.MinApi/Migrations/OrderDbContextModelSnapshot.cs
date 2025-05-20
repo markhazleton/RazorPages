@@ -13,7 +13,7 @@ namespace WiredBrainCoffee.MinApi.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
 
             modelBuilder.Entity("WiredBrainCoffee.MinApi.Order", b =>
                 {
@@ -22,6 +22,10 @@ namespace WiredBrainCoffee.MinApi.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
@@ -46,7 +50,8 @@ namespace WiredBrainCoffee.MinApi.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2021, 12, 3, 22, 13, 8, 225, DateTimeKind.Local).AddTicks(1651),
+                            Created = new DateTime(2024, 1, 1, 8, 0, 0, 0, DateTimeKind.Utc),
+                            CustomerName = "John Doe",
                             Description = "A coffee order",
                             OrderNumber = 100,
                             PromoCode = "Wired123",
@@ -55,7 +60,8 @@ namespace WiredBrainCoffee.MinApi.Migrations
                         new
                         {
                             Id = 2,
-                            Created = new DateTime(2021, 12, 3, 22, 13, 8, 225, DateTimeKind.Local).AddTicks(1689),
+                            Created = new DateTime(2024, 1, 1, 8, 0, 0, 0, DateTimeKind.Utc),
+                            CustomerName = "Jane Smith",
                             Description = "A food order",
                             OrderNumber = 125,
                             PromoCode = "Wired123",
