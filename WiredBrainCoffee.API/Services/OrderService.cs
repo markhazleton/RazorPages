@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using WiredBrainCoffee.Api.Data;
+using WiredBrainCoffee.Models.DTOs;
 
-namespace WiredBrainCoffee.MinApi
+namespace WiredBrainCoffee.Api.Services
 {
     public class OrderService : IOrderService
     {
@@ -11,17 +13,17 @@ namespace WiredBrainCoffee.MinApi
             _context = context;
         }
 
-        public async Task<List<Order>> GetOrdersAsync()
+        public async Task<List<OrderDto>> GetOrdersAsync()
         {
             return await _context.Orders.ToListAsync();
         }
 
-        public async Task<Order> GetOrderByIdAsync(int id)
+        public async Task<OrderDto?> GetOrderByIdAsync(int id)
         {
             return await _context.Orders.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<Order> AddOrderAsync(Order order)
+        public async Task<OrderDto> AddOrderAsync(OrderDto order)
         {
             await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
@@ -29,7 +31,7 @@ namespace WiredBrainCoffee.MinApi
             return order;
         }
 
-        public async Task UpdateOrderAsync(int id, Order newOrder)
+        public async Task UpdateOrderAsync(int id, OrderDto newOrder)
         {
             var order = await _context.Orders.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -39,6 +41,7 @@ namespace WiredBrainCoffee.MinApi
                 order.PromoCode = newOrder.PromoCode;
                 order.Total = newOrder.Total;
                 order.OrderNumber = newOrder.OrderNumber;
+                order.CustomerName = newOrder.CustomerName;
                 await _context.SaveChangesAsync();
             }
         }
@@ -52,14 +55,5 @@ namespace WiredBrainCoffee.MinApi
                 await _context.SaveChangesAsync();
             }
         }
-    }
-
-    public interface IOrderService
-    {
-        Task<Order> AddOrderAsync(Order order);
-        Task DeleteOrderAsync(int id);
-        Task<Order> GetOrderByIdAsync(int id);
-        Task<List<Order>> GetOrdersAsync();
-        Task UpdateOrderAsync(int id, Order newOrder);
     }
 }

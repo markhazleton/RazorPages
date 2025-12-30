@@ -6,7 +6,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\WiredBrainCoffee.Models\WiredBrainCoffee.Models.csproj" />
-    <ProjectReference Include="..\WiredBrainCoffee.Shared\WiredBrainCoffee.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />

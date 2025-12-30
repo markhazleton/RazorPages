@@ -1,19 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using WiredBrainCoffee.Models.DTOs;
 
-namespace WiredBrainCoffee.MinApi
+namespace WiredBrainCoffee.Api.Data
 {
-
     public class OrderDbContext : DbContext
     {
-        public OrderDbContext(DbContextOptions options) : base(options) { }
+        public OrderDbContext(DbContextOptions<OrderDbContext> options) : base(options) { }
 
-        public DbSet<Order> Orders => Set<Order>();
+        public DbSet<OrderDto> Orders => Set<OrderDto>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var fixedDate = new DateTime(2024, 1, 1, 8, 0, 0, DateTimeKind.Utc);
-            modelBuilder.Entity<Order>().HasData(
-                new Order
+            modelBuilder.Entity<OrderDto>().HasData(
+                new OrderDto
                 {
                     Id = 1,
                     Description = "A coffee order",
@@ -23,7 +23,7 @@ namespace WiredBrainCoffee.MinApi
                     Total = 25,
                     CustomerName = "John Doe"
                 },
-                new Order
+                new OrderDto
                 {
                     Id = 2,
                     Description = "A food order",
@@ -34,7 +34,6 @@ namespace WiredBrainCoffee.MinApi
                     CustomerName = "Jane Smith"
                 }
             );
-
         }
     }
 }

@@ -22,12 +22,15 @@ builder.Services.AddBlazorise(options =>
   .AddBootstrapProviders()
   .AddFontAwesomeIcons();
 
+// Configure all services to use the consolidated API
+var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "https://localhost:7024/";
+
 builder.Services.AddHttpClient<IMenuService, MenuService>(client =>
-    client.BaseAddress = new Uri("https://localhost:7024/"));
+    client.BaseAddress = new Uri(apiBaseUrl));
 builder.Services.AddHttpClient<IContactService, ContactService>(client =>
-    client.BaseAddress = new Uri("https://localhost:7024/"));
+    client.BaseAddress = new Uri(apiBaseUrl));
 builder.Services.AddHttpClient<IOrderService, OrderService>(client =>
-    client.BaseAddress = new Uri("https://localhost:9991/"));
+    client.BaseAddress = new Uri(apiBaseUrl));
 
 var host = builder.Build();
 

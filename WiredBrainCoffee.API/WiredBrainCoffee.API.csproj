@@ -17,8 +17,15 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.5" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WiredBrainCoffee.Models\WiredBrainCoffee.Models.csproj" />
+    <ProjectReference Include="..\WiredBrainCoffee.Shared\WiredBrainCoffee.Shared.csproj" />
   </ItemGroup>
 </Project>
