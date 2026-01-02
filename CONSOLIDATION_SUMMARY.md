@@ -61,12 +61,16 @@ The **WiredBrainCoffee.MinApi** project has been **completely removed** from the
   - `wwwroot/appsettings.json`
   - `wwwroot/appsettings.Development.json`
 
-### 6. **Updated Razor Pages Project** ?
+### 6. **Updated Razor Pages Project** ✅
 - **Changes**:
   - Added project references to `WiredBrainCoffee.Models` and `WiredBrainCoffee.Shared`
   - Removed duplicate `MenuItem` model
   - Updated `MenuService` to use shared model with correct properties
   - Fixed Razor views to use `ShortDescription` property
+  - **NEW**: Refactored `MenuService` to call consolidated API via HttpClient
+  - **NEW**: Made `IMenuService` async to support HTTP operations
+  - **NEW**: Updated `Menu.cshtml.cs` PageModel to use async/await pattern
+- **Result**: Razor Pages now consumes API data instead of hardcoded local data
 
 ### 7. **Centralized Menu Data Source** ?
 - **Action**: Created `MenuService` in API with centralized menu data

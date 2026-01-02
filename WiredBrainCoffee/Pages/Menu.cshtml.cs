@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using System;
-using System.Linq;
 using WiredBrainCoffee.Models;
 using WiredBrainCoffee.Services;
 
@@ -8,12 +6,18 @@ namespace WiredBrainCoffee.Pages
 {
     public class MenuModel : PageModel
     {
-        public List<MenuItem> Menu { get; set; }
+        private readonly IMenuService _menuService;
 
-        public void OnGet()
+        public List<MenuItem> Menu { get; set; } = new();
+
+        public MenuModel(IMenuService menuService)
         {
-            var menuService = new MenuService();
-            Menu = menuService.GetMenuItems();
+            _menuService = menuService;
+        }
+
+        public async Task OnGetAsync()
+        {
+            Menu = await _menuService.GetMenuItemsAsync();
         }
     }
 }
